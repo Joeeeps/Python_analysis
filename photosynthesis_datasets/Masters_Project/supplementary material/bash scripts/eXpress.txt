@@ -1,0 +1,31 @@
+ #!/bin/bash
+  #$ -pe mpi 3 
+  #$ -t 3
+  #$ -l h_rt=1:00:00
+  #$ -l rmem=4G
+  #$ -j y
+  #$ -P training
+  #$ -q training.q
+  #$ -wd /fastdata/boa18jp/masters/RNAseq-alloteropsis/accessions/THE/aligned/
+  
+source /usr/local/extras/Genomics/.bashrc
+
+sam=(/fastdata/boa18jp/masters/RNAseq-alloteropsis/accessions/THE/aligned/SAM/*)
+n=(0)
+one=(1)
+
+for i in $(ls /fastdata/boa18jp/masters/RNAseq-alloteropsis/accessions/THE/aligned/SAM/*); 
+do 
+
+express-1.5.1-linux_x86_64/express Sbicolor_454_v3.1.1.cds.fa ${sam[$n]} -o express/${sam[$n]##*/}  --no-bias-correct
+
+n=$(($n + $one))
+ 
+done; 
+
+#code works as follows:
+#get list of alignment .sam files ($sam)
+#assign n to 0
+#assign one to 1
+#make loop to run express for all the alignment files (for i) on the specified reference genome, beginning at file '0' in the list and increasing by one (as n increases by 1 each loop) 
+#output directory created in the /express/ directory, with each output file having the same name as the respective .sam file, minus the directory path (##*/ does this)
